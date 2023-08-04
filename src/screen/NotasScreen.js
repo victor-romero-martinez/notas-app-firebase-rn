@@ -1,22 +1,14 @@
-// import { View, Text } from 'react-native';
-
-// import Card from '../components/Trajeta';
-
-// export default function NotasScreen() {
-  
-//   return (
-//     <View>
-//       <Text>cmabiar a puros view</Text>
-//     </View>
-//   );
-// };
-
-import { Text } from "react-native";
+import { ScrollView, StyleSheet, View, Dimensions } from "react-native";
 import { FlashList } from "@shopify/flash-list";
+
+import Card from "../components/Trajeta";
 
 const DATA = [
   {
-    title: "First Item",
+    title: "First Item tes de longitud mas largo par ver su comportamuwnto",
+  },
+  {
+    title: "First Item tes de longitud mas largo par ver su comportamuwnto",
   },
   {
     title: "Second Item",
@@ -29,13 +21,26 @@ const DATA = [
   },
 ];
 
-export default function NotasScreen()  {
+export default function NotasScreen() {
+
   return (
-    <FlashList
-      numColumns= '2'
-      data={DATA}
-      renderItem={({ item }) => <Text>{item.title}</Text>}
-      estimatedItemSize={200}
-    />
+    <ScrollView>
+      <View style={st.card}>
+        <FlashList
+          numColumns="2"
+          data={DATA}
+          renderItem={({ item }) => <Card title={item.title} />}
+          estimatedItemSize={100}
+        />
+      </View>
+    </ScrollView>
   );
-};
+}
+
+const st = StyleSheet.create({
+  card: {
+    height: Dimensions.get('screen').height,
+    width: Dimensions.get('screen').width,
+    marginHorizontal: 2
+  }
+})

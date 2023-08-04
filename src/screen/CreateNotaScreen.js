@@ -4,37 +4,77 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import { useState } from "react";
+import { collection, addDoc } from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
+
+import { database } from "../config/fb";
 
 export default function CreateNotaScreen() {
-  const [value, onChangeText] = useState("");
+  const [valueSend, onChangeSend] = useState({
+    message: "",
+    createAt: new Date(),
+  });
+  const navigation = useNavigation();
 
   // borra text input
-  const clearTeaxt = () => {
-    onChangeText('');
+  const cleanText = () => {
+    onChangeSend({ ...valueSend, message: "" });
+  };
+
+  // text lenght
+  const textLength = () => {
+    return valueSend.message ? valueSend.message.length : 0;
+  };
+
+  // envio de nota
+  const sendMessage = async () => {
+    if (valueSend.message.trim() !== "") {
+      try {
+        // Aquí realizar la acción de envío
+        await addDoc(collection(database, "notas"), valueSend);
+        ToastAndroid.show("Guardado", ToastAndroid.SHORT);
+        alert(valueSend.createAt);
+        cleanText();
+        navigation.navigate("NotasScreen");
+        // Luego de enviar, puedes limpiar el campo
+        onChangeSend({
+          ...valueSend,
+          message: "",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      ToastAndroid.show("No se puede enviar vacio", ToastAndroid.SHORT);
+    }
   };
 
   return (
     <View style={st.container}>
+      <Text style={st.counter}>{textLength()}/180</Text>
       <View style={st.inputBlock}>
         <TextInput
           style={st.text}
           placeholder="Crear una nueva nota."
           multiline
+          rows={6}
           autoCapitalize="sentences"
-          numberOfLines={6}
           maxLength={180}
-          onChangeText={(text) => onChangeText(text)}
-          value={value}
+          onChangeText={(text) => onChangeSend({ ...valueSend, message: text })}
+          value={valueSend.message}
         />
       </View>
       <View style={st.btnContainer}>
-        <TouchableOpacity  onPress={clearTeaxt}>
-          <Text style={[st.btn]}>Cancelar</Text>
+        <TouchableOpacity onPress={cleanText}>
+          <Text style={st.btn}>Cancelar</Text>
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text style={[st.btn]}>Crear</Text>
+          <Text style={st.btn} onPress={sendMessage}>
+            Crear
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -47,10 +87,14 @@ const st = StyleSheet.create({
     margin: 14,
     backgroundColor: "#fff",
   },
+  counter: {
+    textAlign: "right",
+    marginTop: 78,
+  },
   inputBlock: {
     width: "100%",
     height: "auto",
-    marginTop: 80,
+    marginTop: 10,
     borderColor: "#2a2a40",
     borderWidth: 1,
     borderRadius: 10,
