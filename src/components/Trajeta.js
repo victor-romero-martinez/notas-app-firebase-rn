@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 8,
-    borderRadius: 10
+    borderRadius: 10,
   },
   delete: {
     width: 60,

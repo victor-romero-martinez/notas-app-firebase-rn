@@ -7,10 +7,11 @@ import {
   ToastAndroid,
 } from "react-native";
 import { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
+import { collection, addDoc } from "firebase/firestore";
 
-import { database } from "../config/fb";
+import { db } from "../config/fb";
+
 
 export default function CreateNotaScreen() {
   const [valueSend, onChangeSend] = useState({
@@ -34,16 +35,11 @@ export default function CreateNotaScreen() {
     if (valueSend.message.trim() !== "") {
       try {
         // Aquí realizar la acción de envío
-        await addDoc(collection(database, "notas"), valueSend);
-        ToastAndroid.show("Guardado", ToastAndroid.SHORT);
-        alert(valueSend.createAt);
+        const notasRef = collection(db, "notas");
+        await addDoc(notasRef, valueSend);
         cleanText();
+        ToastAndroid.show("Guardado", ToastAndroid.SHORT);
         navigation.navigate("NotasScreen");
-        // Luego de enviar, puedes limpiar el campo
-        onChangeSend({
-          ...valueSend,
-          message: "",
-        });
       } catch (error) {
         console.log(error);
       }
