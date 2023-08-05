@@ -1,39 +1,39 @@
-import { ScrollView, StyleSheet, View, Dimensions, Text } from "react-native";
+import { ScrollView, StyleSheet, View, Dimensions } from "react-native";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { FlashList } from "@shopify/flash-list";
+import { useState, useEffect } from "react";
+import { db } from "../config/fb";
 
 import Card from "../components/Trajeta";
 
-const DATA = [
-  {
-    title: "First Item tes de longitud mas largo par ver su comportamuwnto",
-    id: 1,
-  },
-  {
-    title: "First Item tes de longitud mas largo par ver su comportamuwnto",
-    id: 2,
-  },
-  {
-    title: "Second Item",
-    id: 3,
-  },
-  {
-    title: "First Item",
-    id: 4,
-  },
-  {
-    title: "Second Item",
-    id: 5,
-  },
-];
-
 export default function NotasScreen() {
+  const [notas, setNotas] = useState([]);
+
+  // refrescar la pantalla
+  useEffect(() => {
+    const notasRef = collection(db, "notas");
+    const q = query(notasRef, orderBy("createAt", "desc"));
+
+
+    // agrega un listener
+    const unSuscribe = onSnapshot(q, (QuerySnapshot) => {
+      setNotas(
+        QuerySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          message: doc.data().message,
+        }))
+      );
+    });
+    return unSuscribe;
+  }, []);
+
   return (
     <ScrollView>
       <View style={st.card}>
         <FlashList
           numColumns="2"
-          data={DATA}
-          renderItem={({ item }) => <Card title={item.title} />}
+          data={notas}
+          renderItem={({ item }) => <Card text={item.message} id={item.id} />}
           keyExtractor={(item) => item.id}
           estimatedItemSize={100}
         />

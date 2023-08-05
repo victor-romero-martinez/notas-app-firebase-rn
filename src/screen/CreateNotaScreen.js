@@ -35,11 +35,11 @@ export default function CreateNotaScreen() {
     if (valueSend.message.trim() !== "") {
       try {
         // Aquí realizar la acción de envío
+        navigation.navigate("NotasScreen");
+        ToastAndroid.show("Guardado", ToastAndroid.SHORT);
         const notasRef = collection(db, "notas");
         await addDoc(notasRef, valueSend);
         cleanText();
-        ToastAndroid.show("Guardado", ToastAndroid.SHORT);
-        navigation.navigate("NotasScreen");
       } catch (error) {
         console.log(error);
       }
