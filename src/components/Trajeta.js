@@ -25,27 +25,20 @@ export default function Card({ text, id }) {
 const styles = StyleSheet.create({
   item: {
     fontSize: 18,
-    backgroundColor: "#00ebc7",
-    padding: 20,
+    backgroundColor: "#2a2a40",
+    color: '#fff',
+    padding: 14,
+    marginBottom: 10,
     marginVertical: 8,
     marginHorizontal: 8,
     borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
   },
   delete: {
     width: 60,
     marginTop: -20,
-    marginLeft: 14,
+    marginLeft: '77%',
     textAlign: "center",
-    backgroundColor: "#232323",
+    backgroundColor: "#ff0000",
     color: "#fff",
     borderRadius: 10,
   },

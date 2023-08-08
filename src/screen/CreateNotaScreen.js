@@ -50,15 +50,15 @@ export default function CreateNotaScreen() {
 
   return (
     <View style={st.container}>
-      <Text style={st.counter}>{textLength()}/180</Text>
+      <Text style={st.counter}>{textLength()}/240</Text>
       <View style={st.inputBlock}>
         <TextInput
           style={st.text}
           placeholder="Crear una nueva nota."
           multiline
-          rows={6}
+          rows={7}
           autoCapitalize="sentences"
-          maxLength={180}
+          maxLength={240}
           onChangeText={(text) => onChangeSend({ ...valueSend, message: text })}
           value={valueSend.message}
         />

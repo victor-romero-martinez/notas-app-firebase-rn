@@ -1,6 +1,5 @@
-import { ScrollView, StyleSheet, View, Dimensions } from "react-native";
+import { ScrollView, View, Text, StyleSheet } from "react-native";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { FlashList } from "@shopify/flash-list";
 import { useState, useEffect } from "react";
 import { db } from "../config/fb";
 
@@ -13,7 +12,6 @@ export default function NotasScreen() {
   useEffect(() => {
     const notasRef = collection(db, "notas");
     const q = query(notasRef, orderBy("createAt", "desc"));
-
 
     // agrega un listener
     const unSuscribe = onSnapshot(q, (QuerySnapshot) => {
@@ -28,24 +26,34 @@ export default function NotasScreen() {
   }, []);
 
   return (
-    <ScrollView>
-      <View style={st.card}>
-        <FlashList
-          numColumns="2"
-          data={notas}
-          renderItem={({ item }) => <Card text={item.message} id={item.id} />}
-          keyExtractor={(item) => item.id}
-          estimatedItemSize={100}
-        />
-      </View>
+    <ScrollView style={st.container}>
+      {notas.length > 0 ? (
+        <View style={st.card}>
+          {notas.map((item) => (
+            <Card text={item.message} key={item.id} id={item.id} />
+          ))}
+        </View>
+      ) : (
+        <View style={st.loading}>
+          <Text>Cargando...</Text>
+        </View>
+      )}
     </ScrollView>
   );
 }
 
 const st = StyleSheet.create({
+  container: {
+    flex: 1,
+    mergin: 5,
+  },
   card: {
-    height: Dimensions.get("screen").height,
-    width: Dimensions.get("screen").width,
-    marginHorizontal: 2,
+    height: "auto",
+    width: "100%",
+  },
+  loading: {
+    fontSize: 30,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
